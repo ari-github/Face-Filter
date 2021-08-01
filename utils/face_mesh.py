@@ -38,6 +38,17 @@ class FaceMesh:
 
         return self.image
 
+    def draw_landmark_index(self):
+        image = self.image.copy()
+        h, w, c = image.shape
+        for face_landmarks in self.get_multi_face_landmarks():
+            for index, lm in enumerate(face_landmarks.landmark):
+
+                image = cv2.putText(image, str(index), (int(lm.x * w), int(lm.y * h)), cv2.FONT_HERSHEY_SIMPLEX,
+                                    0.3, (255, 0, 0), 1, cv2.LINE_AA)
+
+        return image
+
     def get_glasses_landmarks(self):
         multi_face_landmarks = self.get_multi_face_landmarks()
         if multi_face_landmarks:
@@ -50,6 +61,24 @@ class FaceMesh:
                 right_lm = lms[301]
                 right_d_lm = lms[265]
                 center_lm = lms[6]
+
+                faces.append([left_lm, left_d_lm, right_lm, right_d_lm, center_lm])
+            return faces
+        else:
+            return None
+
+    def get_mustache_landmarks(self):
+        multi_face_landmarks = self.get_multi_face_landmarks()
+        if multi_face_landmarks:
+            faces = []
+            for face_landmarks in multi_face_landmarks:
+                lms = face_landmarks.landmark
+
+                left_lm = lms[207]
+                left_d_lm = lms[214]
+                right_lm = lms[427]
+                right_d_lm = lms[434]
+                center_lm = lms[0]
 
                 faces.append([left_lm, left_d_lm, right_lm, right_d_lm, center_lm])
             return faces
